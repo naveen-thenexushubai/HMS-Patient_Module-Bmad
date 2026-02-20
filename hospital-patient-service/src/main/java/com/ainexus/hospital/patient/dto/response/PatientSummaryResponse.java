@@ -1,0 +1,24 @@
+package com.ainexus.hospital.patient.dto.response;
+
+import com.ainexus.hospital.patient.model.Gender;
+import com.ainexus.hospital.patient.model.PatientStatus;
+import lombok.Builder;
+import lombok.Data;
+
+/**
+ * Lightweight patient summary for list/search results.
+ * Only non-PHI or minimally necessary fields.
+ */
+@Data
+@Builder
+public class PatientSummaryResponse {
+
+    private String patientId;
+    private String mrn;
+    private String firstName;
+    private String lastName;
+    private int age;
+    private Gender gender;
+    private String phoneNumber;
+    private PatientStatus status;
+}

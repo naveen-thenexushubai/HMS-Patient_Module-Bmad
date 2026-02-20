@@ -1,0 +1,27 @@
+{
+  "name": "hospital-e2e",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Hospital Patient Module v3.0",
+  "scripts": {
+    "test":          "playwright test",
+    "test:headed":   "playwright test --headed",
+    "test:ui":       "playwright test --ui",
+    "test:login":    "playwright test tests/01-login.spec.ts",
+    "test:list":     "playwright test tests/02-patient-list.spec.ts",
+    "test:detail":   "playwright test tests/03-patient-detail.spec.ts",
+    "test:photo":    "playwright test tests/06-photo-upload.spec.ts",
+    "test:insurance":"playwright test tests/11-insurance.spec.ts",
+    "test:vitals":   "playwright test tests/12-vitals.spec.ts",
+    "test:audit":    "playwright test tests/13-audit-trail.spec.ts",
+    "test:export":   "playwright test tests/14-csv-export.spec.ts",
+    "test:duplicate":"playwright test tests/15-duplicate-detection.spec.ts",
+    "report":        "playwright show-report"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

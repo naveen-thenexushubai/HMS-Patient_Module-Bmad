@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospital_db
+    username: hospital_user
+    password: devpassword
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    com.ainexus: DEBUG
+    org.springframework.security: DEBUG

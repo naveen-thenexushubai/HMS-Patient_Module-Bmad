@@ -1,0 +1,24 @@
+# Development override — only runs PostgreSQL
+# Backend runs via: cd hospital-patient-service && ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+# Frontend runs via: cd hospital-patient-ui && npm run dev
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hospital-postgres-dev
+    environment:
+      POSTGRES_DB: hospital_db
+      POSTGRES_USER: hospital_user
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hospital_user -d hospital_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_dev_data:

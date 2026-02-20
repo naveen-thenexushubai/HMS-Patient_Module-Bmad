@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hospital-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-hospital_db}
+      POSTGRES_USER: ${POSTGRES_USER:-hospital_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hospital-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hospital_user} -d ${POSTGRES_DB:-hospital_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hospital-api:
+    build:
+      context: ./hospital-patient-service
+      dockerfile: Dockerfile
+    container_name: hospital-api
+    env_file: .env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-hospital_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-hospital_user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_ENCRYPTION_KEY: ${AES_ENCRYPTION_KEY}
+      APP_JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hospital-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  hospital-ui:
+    build:
+      context: ./hospital-patient-ui
+      dockerfile: Dockerfile
+    container_name: hospital-ui
+    ports:
+      - "80:80"
+    depends_on:
+      hospital-api:
+        condition: service_healthy
+    networks:
+      - hospital-net
+
+volumes:
+  postgres_data:
+
+networks:
+  hospital-net:
+    driver: bridge
