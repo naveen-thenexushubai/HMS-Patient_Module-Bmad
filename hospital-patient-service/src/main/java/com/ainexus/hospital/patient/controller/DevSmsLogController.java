@@ -5,7 +5,6 @@ import com.ainexus.hospital.patient.repository.SmsDeliveryLogRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/dev/sms-log")
 @RequiredArgsConstructor
-@Profile("dev")
-@Tag(name = "Dev Tools", description = "Development-only endpoints")
+@Tag(name = "Dev Tools", description = "SMS delivery log — staff access only")
 public class DevSmsLogController {
 
     private final SmsDeliveryLogRepository smsLogRepository;

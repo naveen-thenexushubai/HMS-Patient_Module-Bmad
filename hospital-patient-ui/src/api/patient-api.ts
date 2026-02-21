@@ -2,13 +2,15 @@ import api from './axios-instance'
 import type {
   Patient, PatientSummary, PatientFormData, PatientSearchParams, PatientStatus,
   PatientRelationship, AddRelationshipRequest,
-} from '../types/patient.types'
-import type { PageResponse } from '../types/api.types'
-import type {
   PatientInsurance, PatientInsuranceRequest,
   PatientVitals, PatientVitalsRequest,
   AuditEntry,
+  PatientAppointment, AppointmentRequest, AppointmentUpdateRequest,
+  PatientAllergy, PatientAllergyRequest,
+  PortalContactUpdateRequest,
+  PatientNotification,
 } from '../types/patient.types'
+import type { PageResponse } from '../types/api.types'
 
 export async function fetchPatients(params: PatientSearchParams): Promise<PageResponse<PatientSummary>> {
   const { data } = await api.get('/patients', { params })
@@ -129,4 +131,119 @@ export async function fetchAuditTrail(patientId: string): Promise<AuditEntry[]> 
 export async function exportPatientsCsv(params: PatientSearchParams): Promise<Blob> {
   const response = await api.get('/patients/export', { params, responseType: 'blob' })
   return response.data
+}
+
+// ── Appointments ────────────────────────────────────────────────────────────
+
+export async function fetchAppointments(patientId: string): Promise<PatientAppointment[]> {
+  const { data } = await api.get(`/patients/${patientId}/appointments`)
+  return data
+}
+
+export async function fetchUpcomingAppointments(patientId: string): Promise<PatientAppointment[]> {
+  const { data } = await api.get(`/patients/${patientId}/appointments/upcoming`)
+  return data
+}
+
+export async function fetchVisitHistory(patientId: string): Promise<PatientAppointment[]> {
+  const { data } = await api.get(`/patients/${patientId}/appointments/history`)
+  return data
+}
+
+export async function bookAppointment(patientId: string, req: AppointmentRequest): Promise<PatientAppointment> {
+  const { data } = await api.post(`/patients/${patientId}/appointments`, req)
+  return data
+}
+
+export async function updateAppointment(patientId: string, id: number, req: AppointmentUpdateRequest): Promise<PatientAppointment> {
+  const { data } = await api.put(`/patients/${patientId}/appointments/${id}`, req)
+  return data
+}
+
+export async function cancelAppointment(patientId: string, id: number): Promise<PatientAppointment> {
+  const { data } = await api.patch(`/patients/${patientId}/appointments/${id}/cancel`)
+  return data
+}
+
+export interface GlobalAppointmentParams {
+  patientId?: string
+  status?: string
+  appointmentType?: string
+  dateFrom?: string
+  dateTo?: string
+  page?: number
+  size?: number
+}
+
+export async function fetchAllAppointments(params: GlobalAppointmentParams): Promise<PageResponse<PatientAppointment>> {
+  const { data } = await api.get('/appointments', { params })
+  return data
+}
+
+// ── Allergies ───────────────────────────────────────────────────────────────
+
+export async function fetchAllergies(patientId: string): Promise<PatientAllergy[]> {
+  const { data } = await api.get(`/patients/${patientId}/allergies`)
+  return data
+}
+
+export async function checkCriticalAllergy(patientId: string): Promise<boolean> {
+  const { data } = await api.get(`/patients/${patientId}/allergies/critical-check`)
+  return data?.hasCriticalAllergy ?? data
+}
+
+export async function addAllergy(patientId: string, req: PatientAllergyRequest): Promise<PatientAllergy> {
+  const { data } = await api.post(`/patients/${patientId}/allergies`, req)
+  return data
+}
+
+export async function updateAllergy(patientId: string, id: number, req: PatientAllergyRequest): Promise<PatientAllergy> {
+  const { data } = await api.put(`/patients/${patientId}/allergies/${id}`, req)
+  return data
+}
+
+export async function deleteAllergy(patientId: string, id: number): Promise<void> {
+  await api.delete(`/patients/${patientId}/allergies/${id}`)
+}
+
+// ── Patient Portal ──────────────────────────────────────────────────────────
+
+export async function fetchPortalMe(): Promise<Patient> {
+  const { data } = await api.get('/portal/me')
+  return data
+}
+
+export async function fetchPortalAppointments(): Promise<PatientAppointment[]> {
+  const { data } = await api.get('/portal/me/appointments')
+  return data
+}
+
+export async function fetchPortalAllergies(): Promise<PatientAllergy[]> {
+  const { data } = await api.get('/portal/me/allergies')
+  return data
+}
+
+export async function updatePortalContact(req: PortalContactUpdateRequest): Promise<Patient> {
+  const { data } = await api.patch('/portal/me/contact', req)
+  return data
+}
+
+// ── Notifications ────────────────────────────────────────────────────────────
+
+export async function fetchNotifications(): Promise<PatientNotification[]> {
+  const { data } = await api.get('/portal/me/notifications')
+  return data
+}
+
+export async function fetchUnreadCount(): Promise<{ count: number }> {
+  const { data } = await api.get('/portal/me/notifications/unread-count')
+  return data
+}
+
+export async function markNotificationRead(id: number): Promise<void> {
+  await api.patch(`/portal/me/notifications/${id}/read`)
+}
+
+export async function markAllNotificationsRead(): Promise<void> {
+  await api.patch('/portal/me/notifications/read-all')
 }
