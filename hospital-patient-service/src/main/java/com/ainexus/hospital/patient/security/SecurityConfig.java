@@ -48,7 +48,26 @@ public class SecurityConfig {
                 // Vitals endpoints
                 .requestMatchers(HttpMethod.GET,    "/api/v1/patients/*/vitals").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
                 .requestMatchers(HttpMethod.POST,   "/api/v1/patients/*/vitals").hasAnyRole("DOCTOR", "NURSE", "ADMIN")
-                // Patient endpoints — role-based access
+                // ── v2.0.0 NEW ENDPOINTS (must come BEFORE generic patients/** rules) ────
+                // Notification endpoints (PATIENT role only — portal)
+                .requestMatchers("/api/v1/portal/me/notifications/**").hasRole("PATIENT")
+                // Dev SMS log (staff only)
+                .requestMatchers(HttpMethod.GET, "/api/v1/dev/sms-log").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                // Patient Portal — PATIENT role only
+                .requestMatchers("/api/v1/portal/**").hasRole("PATIENT")
+                // Allergy endpoints — all staff can view; only clinical staff can modify
+                .requestMatchers(HttpMethod.GET,    "/api/v1/patients/*/allergies/**").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.POST,   "/api/v1/patients/*/allergies").hasAnyRole("DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.PUT,    "/api/v1/patients/*/allergies/*").hasAnyRole("DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/patients/*/allergies/*").hasAnyRole("DOCTOR", "NURSE", "ADMIN")
+                // Appointment endpoints — all staff can view and book; clinical staff can complete
+                .requestMatchers(HttpMethod.GET,    "/api/v1/patients/*/appointments/**").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.POST,   "/api/v1/patients/*/appointments").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.PUT,    "/api/v1/patients/*/appointments/*").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH,  "/api/v1/patients/*/appointments/*/cancel").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
+                // Global appointment list — RECEPTIONIST and ADMIN only
+                .requestMatchers(HttpMethod.GET,    "/api/v1/appointments").hasAnyRole("RECEPTIONIST", "ADMIN")
+                // Patient endpoints — generic rules (after specific sub-resource rules above)
                 .requestMatchers(HttpMethod.GET,    "/api/v1/patients/**").hasAnyRole("RECEPTIONIST", "DOCTOR", "NURSE", "ADMIN")
                 .requestMatchers(HttpMethod.POST,   "/api/v1/patients").hasAnyRole("RECEPTIONIST", "ADMIN")
                 .requestMatchers(HttpMethod.PUT,    "/api/v1/patients/**").hasAnyRole("RECEPTIONIST", "ADMIN")

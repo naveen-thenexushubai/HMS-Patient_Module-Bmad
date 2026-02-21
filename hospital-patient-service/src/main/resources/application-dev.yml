@@ -12,3 +12,10 @@ logging:
   level:
     com.ainexus: DEBUG
     org.springframework.security: DEBUG
+
+# SMS provider — leave blank to use MockSmsProvider (dev default)
+# Set all three to enable real Twilio SMS
+twilio:
+  account-sid: ""
+  auth-token: ""
+  from-number: ""
