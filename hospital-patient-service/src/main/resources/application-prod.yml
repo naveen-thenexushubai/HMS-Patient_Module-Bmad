@@ -11,6 +11,11 @@ spring:
   jpa:
     show-sql: false
 
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID:-}
+  auth-token: ${TWILIO_AUTH_TOKEN:-}
+  from-number: ${TWILIO_FROM_NUMBER:-}
+
 logging:
   level:
     com.ainexus: INFO

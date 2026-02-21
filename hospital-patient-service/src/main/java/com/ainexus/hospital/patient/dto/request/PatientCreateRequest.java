@@ -28,8 +28,8 @@ public class PatientCreateRequest {
     // Contact Information — phone mandatory
     @NotBlank(message = "Phone number is required")
     @Pattern(
-        regexp = "^(\\+1-?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$",
-        message = "Phone number must be in format +1-XXX-XXX-XXXX, (XXX) XXX-XXXX, or XXX-XXX-XXXX"
+        regexp = "^(\\+[1-9]\\d{6,14}|(\\+1-?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4})$",
+        message = "Phone: international format +917026191993 or US format (XXX) XXX-XXXX"
     )
     private String phoneNumber;
 
@@ -45,7 +45,7 @@ public class PatientCreateRequest {
     private String emergencyContactName;
 
     @Pattern(
-        regexp = "^$|(\\+1-?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$",
+        regexp = "^$|(\\+[1-9]\\d{6,14}|(\\+1-?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4})$",
         message = "Emergency contact phone must be a valid phone number"
     )
     private String emergencyContactPhone;
