@@ -6,19 +6,19 @@ import axios from 'axios'
 
 const BASE = 'http://localhost:80'
 
-// Ensure at least one duplicate of David Chen (P2026007) exists before tests run
+// Ensure at least one duplicate of Arjun Sharma (P2026001) exists before tests run
 test.beforeAll(async () => {
   const tkn = (await axios.post(`${BASE}/api/v1/auth/dev-login`, {
     username: 'receptionist1', role: 'RECEPTIONIST',
   })).data.token
   const hdrs = { Authorization: `Bearer ${tkn}`, 'Content-Type': 'application/json' }
-  const david = (await axios.get(`${BASE}/api/v1/patients/P2026007`, { headers: hdrs })).data
+  const arjun = (await axios.get(`${BASE}/api/v1/patients/P2026001`, { headers: hdrs })).data
   try {
     await axios.post(`${BASE}/api/v1/patients`, {
-      firstName: david.firstName,
-      lastName:  david.lastName,
-      dateOfBirth: david.dateOfBirth,
-      gender: david.gender,
+      firstName: arjun.firstName,
+      lastName:  arjun.lastName,
+      dateOfBirth: arjun.dateOfBirth,
+      gender: arjun.gender,
       phoneNumber: '(555) 111-2222',
       emergencyContactName: 'Dup Contact',
       emergencyContactPhone: '(555) 111-3333',
@@ -31,7 +31,7 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     page, loginAs,
   }) => {
     await loginAs('admin', 'ADMIN')
-    await page.goto('/patients/P2026007')
+    await page.goto('/patients/P2026001')
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(2000) // allow duplicate query to complete
     await page.evaluate(() => window.scrollTo(0, 0))
@@ -43,7 +43,7 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     page, loginAs, detailPage,
   }) => {
     await loginAs('admin', 'ADMIN')
-    await page.goto('/patients/P2026007')
+    await page.goto('/patients/P2026001')
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(2000)
     await page.evaluate(() => window.scrollTo(0, 0))
@@ -56,12 +56,12 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     page, loginAs,
   }) => {
     await loginAs('admin', 'ADMIN')
-    await page.goto('/patients/P2026007')
+    await page.goto('/patients/P2026001')
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(2000)
     await page.evaluate(() => window.scrollTo(0, 0))
 
-    const alertText = await page.locator('.ant-alert').first().innerText()
+    const alertText = await page.locator('.ant-alert').filter({ hasText: /duplicate/i }).first().innerText()
     // Should mention at least 1 possible duplicate
     expect(alertText).toMatch(/\d+ possible duplicate/)
   })
@@ -70,7 +70,7 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     page, loginAs, detailPage,
   }) => {
     await loginAs('admin', 'ADMIN')
-    await page.goto('/patients/P2026007')
+    await page.goto('/patients/P2026001')
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(2000)
     await page.evaluate(() => window.scrollTo(0, 0))
@@ -85,7 +85,7 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     page, loginAs,
   }) => {
     await loginAs('admin', 'ADMIN')
-    // P2026002 (Meera Patel) has a unique name+DOB
+    // P2026002 (Priya Patel) has a unique name+DOB
     await page.goto('/patients/P2026002')
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(2000)
@@ -100,7 +100,7 @@ test.describe('REQ-15 — Duplicate Detection by Name + DOB', () => {
     const tkn = (await axios.post(`${BASE}/api/v1/auth/dev-login`, {
       username: 'admin', role: 'ADMIN',
     })).data.token
-    const resp = await axios.get(`${BASE}/api/v1/patients/P2026007/potential-duplicates`, {
+    const resp = await axios.get(`${BASE}/api/v1/patients/P2026001/potential-duplicates`, {
       headers: { Authorization: `Bearer ${tkn}` },
     })
     expect(resp.data.length).toBeGreaterThanOrEqual(1)

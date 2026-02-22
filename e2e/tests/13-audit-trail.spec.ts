@@ -102,9 +102,9 @@ test.describe('REQ-13 — Audit Trail Viewer', () => {
   test('Audit Trail contains CREATE action for initial registration', async ({
     page, loginAs, listPage, detailPage,
   }) => {
-    // P2026010 has fewer audit entries — CREATE is likely on page 1
+    // P2026005 has fewer audit entries — CREATE is likely on page 1
     await loginAs('admin', 'ADMIN')
-    await listPage.openPatientById('P2026010')
+    await listPage.openPatientById('P2026005')
     await detailPage.openAuditTrailModal()
 
     // Check all visible table cells for CREATE text

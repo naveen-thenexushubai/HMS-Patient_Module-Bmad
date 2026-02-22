@@ -224,7 +224,7 @@ export class PatientDetailPage {
   }
 
   async getDuplicateAlertText() {
-    return this.page.locator('.ant-alert').first().innerText()
+    return this.page.locator('.ant-alert').filter({ hasText: /duplicate/i }).first().innerText()
   }
 
   async openDuplicatesModal() {

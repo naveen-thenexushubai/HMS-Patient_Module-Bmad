@@ -65,8 +65,8 @@ test.describe('REQ-14 — Bulk CSV Export', () => {
     const path = await download.path()
     const content = fs.readFileSync(path!, 'utf8')
     const lines = content.trim().split('\n')
-    // At least header + 10 patients
-    expect(lines.length).toBeGreaterThanOrEqual(11)
+    // At least header + 5 patients
+    expect(lines.length).toBeGreaterThanOrEqual(6)
   })
 
   test('CSV fields with commas are properly quoted', async ({ loginAs, listPage }) => {

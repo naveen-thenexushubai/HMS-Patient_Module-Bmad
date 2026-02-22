@@ -256,19 +256,22 @@ test.describe('Patient Photo Upload', () => {
       }
     })
 
-    await test.step('Attempt to upload a plain text file', async () => {
+    await test.step('Attempt to upload a plain text file and verify rejection', async () => {
       const [fileChooser] = await Promise.all([
         page.waitForEvent('filechooser', { timeout: 8_000 }),
         page.locator('button:has-text("Upload"), button:has-text("Replace")').first().click(),
       ])
+      // Start watching for the error notification BEFORE setFiles triggers beforeUpload.
+      // This avoids a slowMo race condition: notification.error() fires synchronously in
+      // beforeUpload (right after setFiles), but slowMo delays the next Playwright action
+      // by 5s — longer than Ant Design's default 4.5s notification duration.
+      const notifWatcher = page.waitForSelector(
+        '.ant-notification-notice',
+        { state: 'visible', timeout: 8_000 },
+      )
       await fileChooser.setFiles(TEST_TEXT)
-    })
-
-    await test.step('Error / warning notification should appear', async () => {
-      // Ant Design Upload shows an error notification for rejected file types
-      await expect(
-        page.locator('.ant-notification-notice, .ant-message-error, .ant-alert-error')
-      ).toBeVisible({ timeout: 8_000 })
+      // notifWatcher already resolved when notification appeared during setFiles
+      await notifWatcher
     })
 
     await test.step('Photo should still NOT be present (upload rejected)', async () => {
