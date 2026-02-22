@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: hospital-postgres
+    container_name: hms-bmad-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-hospital_db}
       POSTGRES_USER: ${POSTGRES_USER:-hospital_user}
@@ -20,7 +20,7 @@ services:
     build:
       context: ./hospital-patient-service
       dockerfile: Dockerfile
-    container_name: hospital-api
+    container_name: hms-bmad-api
     env_file: .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -47,7 +47,7 @@ services:
     build:
       context: ./hospital-patient-ui
       dockerfile: Dockerfile
-    container_name: hospital-ui
+    container_name: hms-bmad-ui
     ports:
       - "80:80"
     depends_on:
