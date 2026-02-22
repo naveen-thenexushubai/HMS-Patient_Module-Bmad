@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1000 1100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="500" y="40" font-size="26" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    BMAD Method: Agentic Agile AI-Driven Development
+  </text>
+  
+  <!-- Phase 1 Header -->
+  <rect x="50" y="70" width="900" height="40" rx="8" fill="#6366f1" stroke="#4f46e5" stroke-width="2"/>
+  <text x="500" y="95" font-size="18" font-weight="bold" text-anchor="middle" fill="white">PHASE 1: AGENTIC PLANNING</text>
+  
+  <!-- Step 1: Analyst Agent -->
+  <rect x="300" y="130" width="400" height="75" rx="10" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="500" y="160" font-size="17" font-weight="bold" text-anchor="middle" fill="white">1. Analyst Agent 🔍</text>
+  <text x="500" y="180" font-size="13" text-anchor="middle" fill="white">Transform business intent → product brief</text>
+  <text x="500" y="198" font-size="12" text-anchor="middle" fill="white" font-style="italic">Asks: target market, UVP, challenges</text>
+  
+  <!-- Arrow -->
+  <line x1="500" y1="205" x2="500" y2="235" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Step 2: Product Manager Agent -->
+  <rect x="300" y="235" width="400" height="75" rx="10" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="500" y="265" font-size="17" font-weight="bold" text-anchor="middle" fill="white">2. Product Manager Agent 📋</text>
+  <text x="500" y="285" font-size="13" text-anchor="middle" fill="white">Create detailed PRD from brief</text>
+  <text x="500" y="303" font-size="12" text-anchor="middle" fill="white" font-style="italic">Features, requirements, success criteria</text>
+  
+  <!-- Arrow -->
+  <line x1="500" y1="310" x2="500" y2="340" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Step 3: Architect Agent -->
+  <rect x="300" y="340" width="400" height="75" rx="10" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="500" y="370" font-size="17" font-weight="bold" text-anchor="middle" fill="white">3. Architect Agent 🏗️</text>
+  <text x="500" y="390" font-size="13" text-anchor="middle" fill="white">Design system architecture</text>
+  <text x="500" y="408" font-size="12" text-anchor="middle" fill="white" font-style="italic">Tech stack, APIs, data flow, security</text>
+  
+  <!-- Decision Diamond - Planning Complete? -->
+  <line x1="500" y1="415" x2="500" y2="445" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <polygon points="500,445 600,485 500,525 400,485" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="500" y="490" font-size="15" font-weight="bold" text-anchor="middle" fill="#1a1a1a">Planning OK?</text>
+  
+  <!-- No - loop back -->
+  <line x1="400" y1="485" x2="250" y2="485" stroke="#ef4444" stroke-width="3"/>
+  <line x1="250" y1="485" x2="250" y2="167" stroke="#ef4444" stroke-width="3"/>
+  <line x1="250" y1="167" x2="300" y2="167" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowhead-red)"/>
+  <text x="190" y="330" font-size="14" font-weight="bold" fill="#ef4444">No</text>
+  <text x="180" y="350" font-size="12" fill="#ef4444">Refine</text>
+  
+  <!-- Yes - continue -->
+  <line x1="500" y1="525" x2="500" y2="565" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="530" y="550" font-size="14" font-weight="bold" fill="#10b981">Yes</text>
+  
+  <!-- Phase 2 Header -->
+  <rect x="50" y="565" width="900" height="40" rx="8" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <text x="500" y="590" font-size="18" font-weight="bold" text-anchor="middle" fill="white">PHASE 2: CONTEXT-ENGINEERED DEVELOPMENT</text>
+  
+  <!-- Step 4: Scrum Master Agent -->
+  <rect x="300" y="625" width="400" height="75" rx="10" fill="#10b981" stroke="#059669" stroke-width="2"/>
+  <text x="500" y="655" font-size="17" font-weight="bold" text-anchor="middle" fill="white">4. Scrum Master Agent 📊</text>
+  <text x="500" y="675" font-size="13" text-anchor="middle" fill="white">Shard specs → dev stories with context</text>
+  <text x="500" y="693" font-size="12" text-anchor="middle" fill="white" font-style="italic">Isolate context per task, acceptance criteria</text>
+  
+  <!-- Arrow -->
+  <line x1="500" y1="700" x2="500" y2="730" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Step 5: Developer Agent -->
+  <rect x="300" y="730" width="400" height="75" rx="10" fill="#14b8a6" stroke="#0d9488" stroke-width="2"/>
+  <text x="500" y="760" font-size="17" font-weight="bold" text-anchor="middle" fill="white">5. Developer Agent 💻</text>
+  <text x="500" y="780" font-size="13" text-anchor="middle" fill="white">Implement story by story</text>
+  <text x="500" y="798" font-size="12" text-anchor="middle" fill="white" font-style="italic">Full context from sharded spec</text>
+  
+  <!-- Arrow -->
+  <line x1="500" y1="805" x2="500" y2="835" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Step 6: QA Agent -->
+  <rect x="300" y="835" width="400" height="75" rx="10" fill="#ec4899" stroke="#db2777" stroke-width="2"/>
+  <text x="500" y="865" font-size="17" font-weight="bold" text-anchor="middle" fill="white">6. QA Agent ✅</text>
+  <text x="500" y="885" font-size="13" text-anchor="middle" fill="white">Test against specs & criteria</text>
+  <text x="500" y="903" font-size="12" text-anchor="middle" fill="white" font-style="italic">Run tests, verify acceptance criteria</text>
+  
+  <!-- Decision Diamond 2 - Tests Pass? -->
+  <line x1="500" y1="910" x2="500" y2="940" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <polygon points="500,940 600,980 500,1020 400,980" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="500" y="985" font-size="15" font-weight="bold" text-anchor="middle" fill="#1a1a1a">Tests Pass?</text>
+  
+  <!-- No - loop to Developer -->
+  <line x1="600" y1="980" x2="750" y2="980" stroke="#ef4444" stroke-width="3"/>
+  <line x1="750" y1="980" x2="750" y2="767" stroke="#ef4444" stroke-width="3"/>
+  <line x1="750" y1="767" x2="700" y2="767" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowhead-red)"/>
+  <text x="780" y="880" font-size="14" font-weight="bold" fill="#ef4444">No</text>
+  <text x="780" y="900" font-size="12" fill="#ef4444">Fix</text>
+  
+  <!-- Yes - Ship -->
+  <text x="530" y="1005" font-size="14" font-weight="bold" fill="#10b981">Yes</text>
+  
+  <!-- Final: Ship -->
+  <rect x="350" y="1045" width="300" height="55" rx="10" fill="#047857" stroke="#065f46" stroke-width="3"/>
+  <text x="500" y="1075" font-size="20" font-weight="bold" text-anchor="middle" fill="white">🚀 SHIP IT!</text>
+  
+  <!-- Arrow to ship -->
+  <line x1="500" y1="1020" x2="500" y2="1045" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#374151"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ef4444"/>
+    </marker>
+  </defs>
+  
+  <!-- Key Features Box Left -->
+  <rect x="20" y="130" width="230" height="260" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+  <text x="135" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a1a">🎯 Key Features</text>
+  <text x="30" y="180" font-size="11" fill="#374151">• 21+ Specialized Agents</text>
+  <text x="30" y="200" font-size="11" fill="#374151">• Multi-agent collaboration</text>
+  <text x="30" y="220" font-size="11" fill="#374151">• Scale-adaptive (bug→enterprise)</text>
+  <text x="30" y="240" font-size="11" fill="#374151">• Context sharding prevents loss</text>
+  <text x="30" y="260" font-size="11" fill="#374151">• Human-in-the-loop governance</text>
+  <text x="30" y="280" font-size="11" fill="#374151">• 50+ guided workflows</text>
+  <text x="30" y="300" font-size="11" fill="#374151">• Simulates agile team</text>
+  <text x="30" y="320" font-size="11" fill="#374151">• Cross-domain (not just code!)</text>
+  <text x="30" y="340" font-size="11" fill="#374151">• 100% open source</text>
+  <text x="30" y="360" font-size="11" fill="#374151">• Works with any AI assistant</text>
+  <text x="30" y="380" font-size="11" fill="#374151">• 19.1k ⭐ on GitHub</text>
+  
+  <!-- Other Agents Box Right -->
+  <rect x="750" y="130" width="230" height="260" rx="8" fill="#fef3c7" stroke="#fbbf24" stroke-width="2"/>
+  <text x="865" y="155" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a1a">👥 Other Agents</text>
+  <text x="760" y="180" font-size="11" fill="#374151">• UX Designer</text>
+  <text x="760" y="200" font-size="11" fill="#374151">• Technical Writer</text>
+  <text x="760" y="220" font-size="11" fill="#374151">• Security Specialist</text>
+  <text x="760" y="240" font-size="11" fill="#374151">• DevOps Engineer</text>
+  <text x="760" y="260" font-size="11" fill="#374151">• Data Analyst</text>
+  <text x="760" y="280" font-size="11" fill="#374151">• Performance Engineer</text>
+  <text x="760" y="300" font-size="11" fill="#374151">• Accessibility Specialist</text>
+  <text x="760" y="320" font-size="11" fill="#374151">• Documentation Agent</text>
+  <text x="760" y="340" font-size="11" fill="#374151">• Code Reviewer</text>
+  <text x="760" y="360" font-size="11" fill="#374151">• + Custom agents!</text>
+  
+  <!-- Philosophy Box -->
+  <rect x="750" y="625" width="230" height="150" rx="8" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+  <text x="865" y="650" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a1a">💡 Philosophy</text>
+  <text x="760" y="675" font-size="11" fill="#374151">Spec = Source of Truth</text>
+  <text x="760" y="695" font-size="11" fill="#374151">Code = Compiled Output</text>
+  <text x="760" y="715" font-size="11" fill="#374151">Agents = Virtual Team</text>
+  <text x="760" y="735" font-size="11" fill="#374151">Context Engineering</text>
+  <text x="760" y="755" font-size="11" fill="#374151">Human Oversight</text>
+</svg>
