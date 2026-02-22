@@ -5,7 +5,9 @@
 export interface CurrentUser {
   userId: string
   username: string
-  role: 'RECEPTIONIST' | 'DOCTOR' | 'NURSE' | 'ADMIN'
+  role: 'RECEPTIONIST' | 'DOCTOR' | 'NURSE' | 'ADMIN' | 'PATIENT'
+  /** Populated only for PATIENT role — the patient's own patientId claim */
+  patientId?: string
 }
 
 function decodeJwtPayload(token: string): Record<string, unknown> {
@@ -22,12 +24,21 @@ export function useCurrentUser(): CurrentUser | null {
   if (!token) return null
 
   const payload = decodeJwtPayload(token)
-  const userId   = payload['sub']      as string | undefined
-  const username = payload['username'] as string | undefined
-  const role     = payload['role']     as CurrentUser['role'] | undefined
+  const userId   = payload['sub']       as string | undefined
+  const username = payload['username']  as string | undefined
+  const role     = payload['role']      as CurrentUser['role'] | undefined
+  const patientId = payload['patientId'] as string | undefined
 
   if (!userId || !username || !role) return null
-  return { userId, username, role }
+  return { userId, username, role, patientId }
+}
+
+export function isPatientRole(user: CurrentUser | null): boolean {
+  return user?.role === 'PATIENT'
+}
+
+export function isStaffRole(user: CurrentUser | null): boolean {
+  return user !== null && user.role !== 'PATIENT'
 }
 
 export function canEditPatient(user: CurrentUser | null): boolean {
@@ -44,4 +55,17 @@ export function canRecordVitals(user: CurrentUser | null): boolean {
 
 export function canViewAuditTrail(user: CurrentUser | null): boolean {
   return user?.role === 'ADMIN'
+}
+
+export function canScheduleAppointment(user: CurrentUser | null): boolean {
+  return user?.role === 'RECEPTIONIST' || user?.role === 'DOCTOR' ||
+         user?.role === 'NURSE' || user?.role === 'ADMIN'
+}
+
+export function canManageAllergies(user: CurrentUser | null): boolean {
+  return user?.role === 'DOCTOR' || user?.role === 'NURSE' || user?.role === 'ADMIN'
+}
+
+export function canViewGlobalAppointments(user: CurrentUser | null): boolean {
+  return user?.role === 'RECEPTIONIST' || user?.role === 'ADMIN'
 }

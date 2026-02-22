@@ -25,6 +25,10 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     List<Patient> findByFirstNameSearchAndLastNameSearchAndBirthYearAndPatientIdNot(
             String firstNameSearch, String lastNameSearch, Integer birthYear, String patientId);
 
+    /** Soundex phonetic match — used for MEDIUM confidence duplicate detection (REQ-8). */
+    List<Patient> findByFirstNameSoundexAndLastNameSoundexAndBirthYearAndPatientIdNot(
+            String firstNameSoundex, String lastNameSoundex, Integer birthYear, String patientId);
+
     /**
      * DB-level search using indexed search columns.
      *

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-const PHONE_REGEX = /^(\+1-?)?\(?\d{3}\)?[-.\\s]?\d{3}[-.\\s]?\d{4}$/
+// Accepts E.164 international (+917026191993) or US formats ((312) 555-0101)
+const PHONE_REGEX = /^(\+[1-9]\d{6,14}|(\+1-?)?\(?\d{3}\)?[-.\\s]?\d{3}[-.\\s]?\d{4})$/
 
 export const patientSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(100),
@@ -14,14 +15,14 @@ export const patientSchema = z.object({
   phoneNumber: z
     .string()
     .min(1, 'Phone number is required')
-    .regex(PHONE_REGEX, 'Phone: +1-XXX-XXX-XXXX, (XXX) XXX-XXXX, or XXX-XXX-XXXX'),
+    .regex(PHONE_REGEX, 'Phone: +917026191993 (international) or (XXX) XXX-XXXX (US)'),
   email: z.string().email('Invalid email address').optional().or(z.literal('')),
   address:  z.string().optional(),
   city:     z.string().optional(),
   state:    z.string().optional(),
   zipCode:  z.string().optional(),
   emergencyContactName:         z.string().optional(),
-  emergencyContactPhone:        z.string().regex(PHONE_REGEX, 'Invalid phone').optional().or(z.literal('')),
+  emergencyContactPhone:        z.string().regex(PHONE_REGEX, 'Invalid phone format').optional().or(z.literal('')),
   emergencyContactRelationship: z.string().optional(),
   bloodGroup:        z.string().optional(),
   knownAllergies:    z.string().optional(),

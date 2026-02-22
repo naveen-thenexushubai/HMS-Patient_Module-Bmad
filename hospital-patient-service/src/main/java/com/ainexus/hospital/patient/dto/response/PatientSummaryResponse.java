@@ -21,4 +21,12 @@ public class PatientSummaryResponse {
     private Gender gender;
     private String phoneNumber;
     private PatientStatus status;
+
+    /**
+     * Duplicate detection confidence level — only populated when returned
+     * from the findPotentialDuplicates endpoint. Null in all other contexts.
+     * Values: HIGH (phone match) | MEDIUM (soundex + birth year) | LOW (exact name + birth year)
+     */
+    private String matchConfidence;
+    private String matchReason;
 }

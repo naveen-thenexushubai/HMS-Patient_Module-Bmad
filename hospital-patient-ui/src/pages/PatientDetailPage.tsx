@@ -17,7 +17,11 @@ import { InsuranceCard } from '../components/InsuranceCard'
 import { VitalsHistoryCard } from '../components/VitalsHistoryCard'
 import { AuditTrailModal } from '../components/AuditTrailModal'
 import { formatDate, formatDateTime } from '../utils/date.utils'
-import { useCurrentUser, canEditPatient, canManageStatus, canRecordVitals, canViewAuditTrail } from '../hooks/useCurrentUser'
+import { useCurrentUser, canEditPatient, canManageStatus, canRecordVitals, canViewAuditTrail, canScheduleAppointment, canManageAllergies } from '../hooks/useCurrentUser'
+import { CriticalAllergyAlert } from '../components/CriticalAllergyAlert'
+import { AllergyCard } from '../components/AllergyCard'
+import { AppointmentCard } from '../components/AppointmentCard'
+import { VisitHistoryTimeline } from '../components/VisitHistoryTimeline'
 import { buildPatientEditPath, ROUTES } from '../constants/routes'
 import { SUCCESS_NOTIFICATION_DURATION } from '../constants/config'
 
@@ -108,6 +112,9 @@ export function PatientDetailPage() {
         }
       />
 
+      {/* Critical allergy banner — shown before everything else */}
+      <CriticalAllergyAlert patientId={patient.patientId} />
+
       {/* Duplicate detection alert */}
       <DuplicatesAlert patientId={patient.patientId} />
 
@@ -186,6 +193,21 @@ export function PatientDetailPage() {
         {/* Vitals */}
         <Col xs={24}>
           <VitalsHistoryCard patientId={id ?? ''} canRecord={canRecordVitals(user)} />
+        </Col>
+
+        {/* Structured Allergies */}
+        <Col xs={24}>
+          <AllergyCard patientId={patient.patientId} canManage={canManageAllergies(user)} />
+        </Col>
+
+        {/* Upcoming Appointments */}
+        <Col xs={24}>
+          <AppointmentCard patientId={patient.patientId} canSchedule={canScheduleAppointment(user)} />
+        </Col>
+
+        {/* Visit History Timeline */}
+        <Col xs={24}>
+          <VisitHistoryTimeline patientId={patient.patientId} />
         </Col>
 
         {/* Record Information */}

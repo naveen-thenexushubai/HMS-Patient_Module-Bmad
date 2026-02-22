@@ -10,14 +10,16 @@ const { Option } = Select
 
 interface DevLoginForm {
   username: string
-  role: 'RECEPTIONIST' | 'DOCTOR' | 'NURSE' | 'ADMIN'
+  role: 'RECEPTIONIST' | 'DOCTOR' | 'NURSE' | 'ADMIN' | 'PATIENT'
+  patientId?: string
 }
 
 const ROLE_DESCRIPTIONS: Record<string, string> = {
   RECEPTIONIST: 'Register, search, view, update patients',
-  DOCTOR:       'Search and view patients (read-only)',
-  NURSE:        'Search and view patients (read-only)',
+  DOCTOR:       'Search and view patients, record vitals, manage allergies',
+  NURSE:        'Search and view patients, record vitals, manage allergies',
   ADMIN:        'Full access — register, update, activate/deactivate',
+  PATIENT:      'Patient self-service portal — view own profile and appointments',
 }
 
 export function LoginPage() {
@@ -28,13 +30,23 @@ export function LoginPage() {
   async function onFinish(values: DevLoginForm) {
     setLoading(true)
     try {
-      const { data } = await axios.post<{ token: string }>(
-        '/api/v1/auth/dev-login',
-        { username: values.username, role: values.role }
-      )
-      localStorage.setItem('token', data.token)
+      let token: string
+      if (values.role === 'PATIENT') {
+        const { data } = await axios.post<{ token: string }>(
+          '/api/v1/auth/patient-token',
+          { patientId: values.patientId, username: values.username }
+        )
+        token = data.token
+      } else {
+        const { data } = await axios.post<{ token: string }>(
+          '/api/v1/auth/dev-login',
+          { username: values.username, role: values.role }
+        )
+        token = data.token
+      }
+      localStorage.setItem('token', token)
       notification.success({ message: `Logged in as ${values.username} (${values.role})`, duration: 3 })
-      navigate(ROUTES.PATIENTS)
+      navigate(values.role === 'PATIENT' ? ROUTES.PORTAL : ROUTES.PATIENTS)
     } catch {
       notification.error({ message: 'Login failed', description: 'Could not reach the backend. Make sure the API is running.' })
     } finally {
@@ -79,8 +91,19 @@ export function LoginPage() {
               <Option value="DOCTOR">DOCTOR</Option>
               <Option value="NURSE">NURSE</Option>
               <Option value="ADMIN">ADMIN</Option>
+              <Option value="PATIENT">PATIENT</Option>
             </Select>
           </Form.Item>
+
+          {selectedRole === 'PATIENT' && (
+            <Form.Item
+              label="Patient ID"
+              name="patientId"
+              rules={[{ required: true, message: 'Enter your Patient ID (e.g. P2026001)' }]}
+            >
+              <Input prefix={<LockOutlined />} placeholder="e.g. P2026001" id="patientId" />
+            </Form.Item>
+          )}
 
           {selectedRole && (
             <div style={{ marginBottom: 16, fontSize: 13, color: 'rgba(0,0,0,0.45)' }}>

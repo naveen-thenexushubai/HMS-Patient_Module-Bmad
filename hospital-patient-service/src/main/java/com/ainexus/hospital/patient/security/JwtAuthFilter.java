@@ -48,12 +48,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .parseSignedClaims(token)
                 .getPayload();
 
-            String userId   = claims.getSubject();
-            String username = claims.get("username", String.class);
-            String role     = claims.get("role", String.class);
+            String userId    = claims.getSubject();
+            String username  = claims.get("username", String.class);
+            String role      = claims.get("role", String.class);
+            String patientId = claims.get("patientId", String.class); // only for PATIENT role
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserPrincipal principal = new UserPrincipal(userId, username, role);
+                UserPrincipal principal = new UserPrincipal(userId, username, role, patientId);
                 UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

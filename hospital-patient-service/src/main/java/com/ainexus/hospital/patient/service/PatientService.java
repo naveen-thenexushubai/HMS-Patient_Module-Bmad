@@ -120,24 +120,51 @@ public class PatientService {
         Patient patient = patientRepository.findByPatientId(patientId)
                 .orElseThrow(() -> new PatientNotFoundException(patientId));
 
-        // 1. Phone-based duplicates (existing)
-        List<Patient> phoneMatches = (patient.getPhoneNumberHash() != null && !patient.getPhoneNumberHash().isBlank())
-                ? patientRepository.findByPhoneNumberHashAndPatientIdNot(patient.getPhoneNumberHash(), patientId)
-                : List.of();
+        // Track each candidate with its confidence level (highest wins on merge)
+        Map<String, PatientSummaryResponse> resultMap = new java.util.LinkedHashMap<>();
 
-        // 2. Name + birth-year duplicates (new)
-        List<Patient> nameMatches = (patient.getFirstNameSearch() != null && patient.getBirthYear() != null)
-                ? patientRepository.findByFirstNameSearchAndLastNameSearchAndBirthYearAndPatientIdNot(
-                        patient.getFirstNameSearch(), patient.getLastNameSearch(),
-                        patient.getBirthYear(), patientId)
-                : List.of();
+        // 1. HIGH confidence — phone hash exact match
+        if (patient.getPhoneNumberHash() != null && !patient.getPhoneNumberHash().isBlank()) {
+            patientRepository.findByPhoneNumberHashAndPatientIdNot(patient.getPhoneNumberHash(), patientId)
+                    .forEach(p -> {
+                        PatientSummaryResponse r = buildSummaryResponse(p);
+                        r.setMatchConfidence("HIGH");
+                        r.setMatchReason("Phone number match");
+                        resultMap.put(p.getPatientId(), r);
+                    });
+        }
 
-        // Merge and deduplicate by patientId
-        return Stream.concat(phoneMatches.stream(), nameMatches.stream())
-                .collect(Collectors.toMap(Patient::getPatientId, p -> p, (a, b) -> a))
-                .values().stream()
-                .map(this::buildSummaryResponse)
-                .toList();
+        // 2. MEDIUM confidence — Soundex phonetic name + same birth year
+        if (patient.getFirstNameSoundex() != null && patient.getBirthYear() != null) {
+            patientRepository.findByFirstNameSoundexAndLastNameSoundexAndBirthYearAndPatientIdNot(
+                            patient.getFirstNameSoundex(), patient.getLastNameSoundex(),
+                            patient.getBirthYear(), patientId)
+                    .forEach(p -> {
+                        if (!resultMap.containsKey(p.getPatientId())) {
+                            PatientSummaryResponse r = buildSummaryResponse(p);
+                            r.setMatchConfidence("MEDIUM");
+                            r.setMatchReason("Name sounds similar + same birth year");
+                            resultMap.put(p.getPatientId(), r);
+                        }
+                    });
+        }
+
+        // 3. LOW confidence — exact name token + birth year
+        if (patient.getFirstNameSearch() != null && patient.getBirthYear() != null) {
+            patientRepository.findByFirstNameSearchAndLastNameSearchAndBirthYearAndPatientIdNot(
+                            patient.getFirstNameSearch(), patient.getLastNameSearch(),
+                            patient.getBirthYear(), patientId)
+                    .forEach(p -> {
+                        if (!resultMap.containsKey(p.getPatientId())) {
+                            PatientSummaryResponse r = buildSummaryResponse(p);
+                            r.setMatchConfidence("LOW");
+                            r.setMatchReason("Exact name + birth year match");
+                            resultMap.put(p.getPatientId(), r);
+                        }
+                    });
+        }
+
+        return resultMap.values().stream().toList();
     }
 
     @Transactional(readOnly = true)
@@ -251,6 +278,9 @@ public class PatientService {
         patient.setLastNameSearch(searchIndexService.nameSearchToken(lastName));
         patient.setPhoneNumberHash(searchIndexService.hashPhone(phone));
         patient.setEmailHash(searchIndexService.hashEmail(email));
+        // Soundex phonetic codes for duplicate detection (v2.0.0 REQ-8)
+        patient.setFirstNameSoundex(searchIndexService.soundex(firstName));
+        patient.setLastNameSoundex(searchIndexService.soundex(lastName));
     }
 
     private void populateDerivedFields(Patient patient, String dateOfBirth,

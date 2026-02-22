@@ -2,6 +2,7 @@ package com.ainexus.hospital.patient.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,17 @@ public class GlobalExceptionHandler {
         pd.setType(URI.create(ERROR_BASE + "validation-error"));
         pd.setTitle("Validation Failed");
         pd.setProperty("fieldErrors", fieldErrors);
+        return pd;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleBadJson(HttpMessageNotReadableException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST,
+            "Request body contains an invalid value: " + ex.getMostSpecificCause().getMessage()
+        );
+        pd.setType(URI.create(ERROR_BASE + "invalid-request-body"));
+        pd.setTitle("Invalid Request Body");
         return pd;
     }
 

@@ -35,7 +35,13 @@ public class DevAuthController {
     @Data
     public static class DevLoginRequest {
         private String username;
-        private String role; // RECEPTIONIST | DOCTOR | NURSE | ADMIN
+        private String role; // RECEPTIONIST | DOCTOR | NURSE | ADMIN | PATIENT
+    }
+
+    @Data
+    public static class PatientLoginRequest {
+        private String patientId; // e.g. P2026001
+        private String username;  // patient's display name
     }
 
     @PostMapping("/dev-login")
@@ -52,5 +58,24 @@ public class DevAuthController {
                 .compact();
 
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    /**
+     * Issues a PATIENT-role JWT for portal access.
+     * The patientId claim is used by PatientPortalController to scope access.
+     */
+    @PostMapping("/patient-token")
+    public ResponseEntity<Map<String, String>> patientToken(@RequestBody PatientLoginRequest req) {
+        String token = Jwts.builder()
+                .subject(req.getPatientId())   // userId = patientId for PATIENT role
+                .claim("username", req.getUsername())
+                .claim("role", "PATIENT")
+                .claim("patientId", req.getPatientId())
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plus(8, ChronoUnit.HOURS)))
+                .signWith(Keys.hmacShaKeyFor(secretBytes))
+                .compact();
+
+        return ResponseEntity.ok(Map.of("token", token, "patientId", req.getPatientId()));
     }
 }

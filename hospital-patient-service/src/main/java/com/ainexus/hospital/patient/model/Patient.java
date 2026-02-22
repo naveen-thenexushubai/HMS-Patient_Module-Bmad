@@ -100,6 +100,13 @@ public class Patient {
     @Column(name = "email_hash", length = 64)
     private String emailHash;         // HMAC-SHA256 of lowercase email
 
+    // Phonetic search columns — Soundex codes for duplicate detection (v2.0.0 REQ-8)
+    @Column(name = "first_name_soundex", length = 10)
+    private String firstNameSoundex;  // Soundex code of firstName (e.g. "J500" for "John")
+
+    @Column(name = "last_name_soundex", length = 10)
+    private String lastNameSoundex;   // Soundex code of lastName
+
     // Status & Audit
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)

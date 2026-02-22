@@ -12,6 +12,12 @@ interface Props {
   onClose: () => void
 }
 
+const CONFIDENCE_COLOR: Record<string, string> = {
+  HIGH:   'red',
+  MEDIUM: 'orange',
+  LOW:    'gold',
+}
+
 export function DuplicatesModal({ open, currentPatientId, duplicates, onClose }: Props) {
   const navigate = useNavigate()
 
@@ -32,6 +38,16 @@ export function DuplicatesModal({ open, currentPatientId, duplicates, onClose }:
     { title: 'Phone', dataIndex: 'phoneNumber' },
     { title: 'Status', dataIndex: 'status', render: (s) => <StatusBadge status={s} /> },
     {
+      title: 'Match',
+      key: 'match',
+      render: (_, r) => r.matchConfidence ? (
+        <div>
+          <Tag color={CONFIDENCE_COLOR[r.matchConfidence]}>{r.matchConfidence}</Tag>
+          {r.matchReason && <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{r.matchReason}</div>}
+        </div>
+      ) : null,
+    },
+    {
       title: 'Action',
       render: (_, r) => (
         <Button
@@ -51,10 +67,11 @@ export function DuplicatesModal({ open, currentPatientId, duplicates, onClose }:
       title="Potential Duplicate Patients"
       onCancel={onClose}
       footer={<Button onClick={onClose}>Close</Button>}
-      width={900}
+      width={1000}
     >
       <p style={{ color: '#595959', marginBottom: 16 }}>
-        The following patients share the same phone number. Review carefully before proceeding.
+        The following patients may be duplicates. Confidence levels: <Tag color="red">HIGH</Tag> phone match,{' '}
+        <Tag color="orange">MEDIUM</Tag> phonetic name + birth year, <Tag color="gold">LOW</Tag> exact name + birth year.
       </p>
       <Table
         dataSource={duplicates}
