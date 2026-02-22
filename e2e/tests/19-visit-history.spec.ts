@@ -121,11 +121,24 @@ test.describe('REQ-9 — Visit History Timeline', () => {
     expect(cardText).toMatch(/Dr\. History Test|Healthy|Cardiology/i)
   })
 
-  test('UI — New patient (P2026003) shows empty visit history', async ({
+  test('UI — New patient with no appointments shows empty visit history', async ({
     page, loginAs,
   }) => {
+    // Register a fresh patient with no appointments to guarantee an empty state
+    const tkn = (await axios.post(`${BASE}/api/v1/auth/dev-login`, {
+      username: 'receptionist1', role: 'RECEPTIONIST',
+    })).data.token
+    const newPatient = (await axios.post(`${BASE}/api/v1/patients`, {
+      firstName: 'Empty',
+      lastName: 'HistoryTest',
+      dateOfBirth: '1995-06-15',
+      gender: 'FEMALE',
+      phoneNumber: '(555) 900-0001',
+    }, { headers: { Authorization: `Bearer ${tkn}`, 'Content-Type': 'application/json' } })).data
+    const newPatientId = newPatient.patientId
+
     await loginAs('admin', 'ADMIN')
-    await page.goto('/patients/P2026003')
+    await page.goto(`/patients/${newPatientId}`)
     await page.waitForSelector('text=Personal Information', { timeout: 10_000 })
     await page.waitForTimeout(800)
 
